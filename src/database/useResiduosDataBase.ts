@@ -34,15 +34,16 @@ export function useResiduosDataBase(){
         }
     }//fim da função
 
-    async function consultar(categoria :string){
+    async function consultar(categoria :string,  data: string){
         try {
-            const query = "select * from residuos where categoria like ?"//substituir por qualquer item de busca
+            const query = "select * from residuos where categoria like ? "//substituir por qualquer item de busca
             const response = await dataBase.getAllAsync<ResiduosDataBase>(query,`%${categoria}%`)
             return response 
         } catch (error) {
             throw error
         }
     }//fim do consultar
+
 
     async function remove(id:number){
         try {
