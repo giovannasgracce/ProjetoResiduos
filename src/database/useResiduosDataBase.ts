@@ -6,7 +6,7 @@ export type ResiduosDataBase = {
     data: string      
     categoria: string
     peso: string
-    
+    busca: string
 }//criando o local de vaiáveis do Banco
 
 export function useResiduosDataBase(){
@@ -35,10 +35,10 @@ export function useResiduosDataBase(){
         }
     }//fim da função
 
-    async function consultar(categoria :string,data :string, ){
+    async function consultar(busca :string ){
         try {
             const query = "select * from residuos where categoria  like ?  OR data like ? "//substituir por qualquer item de busca
-            const response = await dataBase.getAllAsync<ResiduosDataBase>(query,`%${categoria}%`,`%${data}%`)
+            const response = await dataBase.getAllAsync<ResiduosDataBase>(query,`%${busca}%`,`%${busca}%`)
             return response 
         } catch (error) {
             throw error
