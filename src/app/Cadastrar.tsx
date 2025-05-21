@@ -1,16 +1,17 @@
-import { View, Button, StyleSheet, Alert } from "react-native";
+import { View, Button, StyleSheet, Alert, Platform, Text, TouchableOpacity } from "react-native";
 import { Campo } from "@/components/Campo";
 import { useState, useEffect } from "react";
 import { ResiduosDataBase, useResiduosDataBase } from "@/database/useResiduosDataBase";
 import { useNavigation } from "expo-router";
 import { Picker } from '@react-native-picker/picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function Index() {
   const [id, setId] = useState("");
   const [data, setData] = useState("");
   const [categoria, setCategoria] = useState("");
   const [peso, setPeso] = useState("");
-  const [residuos, setResiduos] = useState<ResiduosDataBase[]>();
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const ResiduosDataBase = useResiduosDataBase();
   const navigation = useNavigation();
 
@@ -41,6 +42,14 @@ export default function Index() {
     setData(formato);
   }, []);
 
+  function onChangeDate(event: any, selectedDate: Date) {
+    setShowDatePicker(Platform.OS === "ios"); // no Android fecha o picker após escolher
+    if (selectedDate) {
+      const formato = selectedDate.toISOString().split("T")[0];
+      setData(formato);
+    }
+  }
+
   async function create() {
     try {
       const response = await ResiduosDataBase.create({
@@ -53,12 +62,29 @@ export default function Index() {
     } catch (error) {
       console.log(error);
     }
-  } // fim do create
+  }
 
   return (
     <View style={styles.container}>
-      <Campo placeholder="Data (yyyy-mm-dd)" onChangeText={setData} value={data} />
       
+      {/* Botão para abrir o calendário */}
+      <TouchableOpacity
+        onPress={() => setShowDatePicker(true)}
+        style={styles.dateInput}
+      >
+        <Text style={{ fontSize: 16 }}>{data || "Selecione a data"}</Text>
+      </TouchableOpacity>
+
+      {/* DateTimePicker aparece quando showDatePicker é true */}
+      {showDatePicker && (
+        <DateTimePicker
+          value={data ? new Date(data) : new Date()}
+          mode="date"
+          display="default"
+          onChange={onChangeDate}
+        />
+      )}
+
       <Picker
         selectedValue={categoria}
         onValueChange={(itemValue) => setCategoria(itemValue)}
@@ -103,5 +129,14 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "white",
     marginBottom: 20,
+  },
+  dateInput: {
+    width: 300,
+    height: 50,
+    backgroundColor: "white",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    borderRadius: 5,
   },
 });

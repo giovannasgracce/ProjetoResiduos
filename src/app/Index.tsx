@@ -10,14 +10,14 @@ export default function Menu() {
         style={styles.button} 
         onPress={() => navigation.navigate('Cadastrar')} // Cadastro
       >
-        <Text style={styles.buttonText}>Cadastrar Cliente</Text>
+        <Text style={styles.buttonText}>Cadastrar Residuos</Text>
       </TouchableOpacity>
 
       <TouchableOpacity 
         style={styles.button} 
         onPress={() => navigation.navigate('Consultar2')}
       >
-        <Text style={styles.buttonText}>Consultar Clientes</Text>
+        <Text style={styles.buttonText}>Consultar Residuos</Text>
       </TouchableOpacity>
       
     </View>
